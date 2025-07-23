@@ -59,7 +59,7 @@ public class VentaService {
         evento.setDescripcion("Venta registrada: id=" + ventaRegistrada.getId() + ", total=" + ventaRegistrada.getTotal());
         evento.setFecha(LocalDateTime.now());
         auditoriaAPIClient.registrarEvento(evento);
-        
+
         return ventaRegistrada;
     }
 
