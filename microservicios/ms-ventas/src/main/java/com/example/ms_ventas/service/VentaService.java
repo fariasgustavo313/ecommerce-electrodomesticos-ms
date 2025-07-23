@@ -1,12 +1,10 @@
 package com.example.ms_ventas.service;
 
 import com.example.ms_ventas.dto.CarritoDTO;
+import com.example.ms_ventas.dto.EventoAuditoriaDTO;
 import com.example.ms_ventas.dto.UsuarioDTO;
 import com.example.ms_ventas.model.Venta;
-import com.example.ms_ventas.repository.CarritoAPIClient;
-import com.example.ms_ventas.repository.InventarioAPIClient;
-import com.example.ms_ventas.repository.UsuarioAPIClient;
-import com.example.ms_ventas.repository.VentaRepository;
+import com.example.ms_ventas.repository.*;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,9 @@ public class VentaService {
     @Autowired
     private InventarioAPIClient inventarioAPIClient;
 
+    @Autowired
+    private AuditoriaAPIClient auditoriaAPIClient;
+
     public List<Venta> getVentas() {
         return ventaRepository.findAll();
     }
@@ -51,8 +52,15 @@ public class VentaService {
         venta.setCarritoId(carritoId);
         venta.setUsuarioId(usuarioId);
         venta.setTotal(carrito.getTotal());
+        Venta ventaRegistrada = ventaRepository.save(venta);
 
-        return ventaRepository.save(venta);
+        EventoAuditoriaDTO evento = new EventoAuditoriaDTO();
+        evento.setServicio("ms-ventas");
+        evento.setDescripcion("Venta registrada: id=" + ventaRegistrada.getId() + ", total=" + ventaRegistrada.getTotal());
+        evento.setFecha(LocalDateTime.now());
+        auditoriaAPIClient.registrarEvento(evento);
+        
+        return ventaRegistrada;
     }
 
     @CircuitBreaker(name = "inventarioCB", fallbackMethod = "fallbackRestarStock")
