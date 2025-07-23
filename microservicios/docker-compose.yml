@@ -1,0 +1,90 @@
+version: "3.8"
+
+services:
+  eureka-server:
+    build: eureka-server
+    mem_limit: 512m
+    ports:
+      - "8761:8761"
+    networks:
+      - 'ecommerce-network'
+  api-gateway:
+    build: api-gateway
+    mem_limit: 512m
+    ports:
+      - "443:443"
+    networks:
+      - 'ecommerce-network'
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  ms-auditoria:
+    build: ms-auditoria
+    mem_limit: 512m
+    ports:
+      - "8086:8086"
+    networks:
+      - 'ecommerce-network'
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  ms-carrito:
+    build: ms-carrito
+    mem_limit: 512m
+    ports:
+      - "8084:8084"
+    networks:
+      - 'ecommerce-network'
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  ms-inventario:
+    build: ms-inventario
+    mem_limit: 512m
+    ports:
+      - "8083:8083"
+    networks:
+      - 'ecommerce-network'
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  ms-productos:
+    build: ms-productos
+    mem_limit: 512m
+    ports:
+      - "8081:8081"
+    networks:
+      - 'ecommerce-network'
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  ms-usuarios:
+    build: ms-usuarios
+    mem_limit: 512m
+    ports:
+      - "8082:8082"
+    networks:
+      - 'ecommerce-network'
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+  ms-ventas:
+    build: ms-ventas
+    mem_limit: 512m
+    ports:
+      - "8085:8085"
+    networks:
+      - 'ecommerce-network'
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+networks:
+  ecommerce-network:
