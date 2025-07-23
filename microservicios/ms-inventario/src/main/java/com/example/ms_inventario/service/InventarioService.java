@@ -26,8 +26,8 @@ public class InventarioService {
         return inventarioRepository.findByProductoId(productoId);
     }
 
-    public void saveInventario(Inventario inventario) {
-        inventarioRepository.save(inventario);
+    public Inventario saveInventario(Inventario inventario) {
+        return inventarioRepository.save(inventario);
     }
 
     public void deleteInventario(Long id) {
