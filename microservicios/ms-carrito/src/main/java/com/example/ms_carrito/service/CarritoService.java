@@ -4,6 +4,8 @@ import com.example.ms_carrito.dto.ProductoDTO;
 import com.example.ms_carrito.model.Carrito;
 import com.example.ms_carrito.repository.CarritoRepository;
 import com.example.ms_carrito.repository.ProductoAPIClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +54,8 @@ public class CarritoService {
         return carritoRepository.save(carrito);
     }
 
+    @CircuitBreaker(name = "productosCB", fallbackMethod = "productoFallback")
+    @Retry(name = "productosRetry")
     public Double calcularTotal(Carrito carrito) {
         double total = 0.0;
         for (Long productoId : carrito.getProductos()) {
@@ -59,5 +63,11 @@ public class CarritoService {
             if (p != null) total += p.getPrecio();
         }
         return total;
+    }
+
+    public Double productoFallback(Carrito carrito, Throwable throwable) {
+        // Si ningun producto responde, devuelvo 0
+        System.out.println("Fallo al obtener productos: " + throwable.getMessage());
+        return 0.0;
     }
 }
