@@ -5,12 +5,12 @@ import java.util.List;
 public class CarritoDTO {
 
     private Long id;
-    private List<Long> productoId;
+    private List<Long> productos;
     private Double total;
 
-    public CarritoDTO(Long id, List<Long> productoId, Double total) {
+    public CarritoDTO(Long id, List<Long> productos, Double total) {
         this.id = id;
-        this.productoId = productoId;
+        this.productos = productos;
         this.total = total;
     }
 
@@ -25,12 +25,12 @@ public class CarritoDTO {
         this.id = id;
     }
 
-    public List<Long> getProductoId() {
-        return productoId;
+    public List<Long> getProductos() {
+        return productos;
     }
 
-    public void setProductoId(List<Long> productoId) {
-        this.productoId = productoId;
+    public void setProductos(List<Long> productos) {
+        this.productos = productos;
     }
 
     public Double getTotal() {
