@@ -7,6 +7,8 @@ import com.example.ms_carrito.repository.ProductoAPIClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CarritoService {
 
@@ -15,6 +17,24 @@ public class CarritoService {
 
     @Autowired
     private ProductoAPIClient productoAPIClient;
+
+    public List<Carrito> getCarritos() {
+        return carritoRepository.findAll();
+    }
+
+    public Carrito getCarritoById(Long id) {
+        return carritoRepository.findById(id).orElse(null);
+    }
+
+    public Carrito createCarrito() {
+        Carrito c = new Carrito();
+        c.setTotal(0.0);
+        return carritoRepository.save(c);
+    }
+
+    public Carrito saveCarrito(Carrito carrito) {
+        return carritoRepository.save(carrito);
+    }
 
     public Carrito agregarProducto(Long carritoId, Long productoId) {
         Carrito carrito = carritoRepository.findById(carritoId).orElseThrow();
